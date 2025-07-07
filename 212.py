@@ -3,7 +3,7 @@ import psycopg2 as psy
 import pprint as pp
 
 
-df = pd.read_html('C:/Users/Pavel/Documents/Data/Nomeclature.htm', index_col=0, skiprows=1, encoding='utf-8')
+df = pd.read_html('C:/Users/Павел/Documents/Python/Info/Выгрузка/Номенклатура.htm', index_col=0, skiprows=1, encoding='utf-8')
 conn = psy.connect(dbname='WhProd', user='postgres', password='adminPavel', host='localhost', port=5432)
 printer = pp.PrettyPrinter()
 cur = conn.cursor()
@@ -11,7 +11,7 @@ cur = conn.cursor()
 cur.execute(
             """SELECT "number_1C", id FROM public.inv_nomeclature_group;""", 
         )
-import_rows = dict(cur.fetchall())
+parent_ids_list = dict(cur.fetchall())
 
 for row in df:
     row = row.fillna(0) 
@@ -25,11 +25,12 @@ for row in df:
         if is_group == 'Да':
             pass
         else:
-
+            parent_id = parent_ids_list[parent_code]
             cur.execute(
-                """INSERT INTO public.inv_nomeclature ("number_1C", name, parent_id) VALUES (%s, %s, %s)""", 
-                (number_1C, name, import_rows[parent_code])
+                """INSERT INTO public.inv_nomeclature(name, "SKU", "number_1C", parent_id) VALUES (%s, %s, %s, %s)""", 
+                (number_1C, name, sku, parent_id)
             )
+
 conn.commit()
 cur.close()                         
 conn.close()

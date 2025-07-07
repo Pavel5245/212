@@ -3,7 +3,7 @@ import psycopg2 as psy
 import pprint as pp
 import string as s
 dict_of_counts = {}
-df = pd.read_html('C:/Users/Pavel/Documents/Data/Группы_Номенклатуры.htm', index_col=0, skiprows=1, encoding='utf-8')
+df = pd.read_html('C:/Users/Павел/Documents/Python/Info/Группы_Номенклатуры/Группы_Номенклатуры.htm', index_col=0, skiprows=1, encoding='utf-8')
 conn = psy.connect(dbname='WhProd', user='postgres', password='adminPavel', host='localhost', port=5432)
 n = 5
 request = 0
